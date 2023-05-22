@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>Testing lines</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            crossorigin=""></script>
+</head>
+<body>
+<div id="mapid" style="height: 600px; width: 600px;"></div>
+<script>
+  let map = L.map('mapid', {editable: true});
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Map data &copy; OpenStreetMap contributors'
+  }).addTo(map);
+  map.fitBounds(L.latLngBounds({lat: 51.585737, lng: -0.15183}, {lat: 51.579701, lng: -0.146}), 17)
+
+  const start = {
+    lat: 51.580403,
+    lng: -0.154002,
+  }
+  const end = {
+    lat: 51.58503,
+    lng: -0.1465,
+  }
+  const lineOptions = {
+    width: 2
+  }
+
+  const line = L.polyline([start, end], lineOptions).addTo(map);
+  const midPoint = line.getCenter();
+  const slope = (end.lng - start.lng) / (end.lat - start.lat);
+  const perpendicularSlope = -1 / slope;
+  const distance = 0.001;
+  const perpendicularStart = L.latLng(midPoint.lat + distance, midPoint.lng + (distance * perpendicularSlope));
+  const perpendicularEnd = L.latLng(midPoint.lat - distance, midPoint.lng - (distance * perpendicularSlope));
+  const perpendicularLine = L.polyline([perpendicularStart, perpendicularEnd], { color: 'red' }).addTo(map);
+</script>
+
+</body>
+</html>
